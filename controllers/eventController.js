@@ -9,10 +9,10 @@ router.get('/', async (req, res) => {
       order: [['date', 'ASC']],
       include: [{
         model: Meet_Greet,
-        as: 'meetAndGreet', // Use the alias defined in the association
+        as: 'meetAndGreet', 
         include: [{
           model: Band,
-          as: 'band' // Assuming you want to include Band details
+          as: 'band' 
         }]
       }]
     });

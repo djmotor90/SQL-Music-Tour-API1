@@ -4,10 +4,16 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     static associate(models) {
-      // Associate Event with Meet_Greet
+     
       Event.belongsTo(models.Meet_Greet, {
         foreignKey: 'meet_greet_id',
         as: 'meetAndGreet'
+      });
+
+     
+      Event.hasMany(models.Stage_Event, {
+        foreignKey: 'event_id',
+        as: 'stageEvents'
       });
     }
   }

@@ -1,15 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const { Stage, Event } = require('../models'); // Import Sequelize models
+const { Stage, Event, Stage_Event } = require('../models'); 
 
-// Index route (list all stages)
+// Index route (list all stages with associated events)
 router.get('/', async (req, res) => {
   try {
     const stages = await Stage.findAll({
       include: [
         {
-          model: Event, // Use the imported Event model
-          as: 'event'
+          model: Event, 
+          as: 'event',
+          include: [
+            {
+              model: Stage_Event, 
+              as: 'stageEvents'
+            }
+          ]
         }
       ]
     });
@@ -20,6 +26,8 @@ router.get('/', async (req, res) => {
   }
 });
 
+module.exports = router;
+
 
 
 // Show route (get a specific stage by ID)
@@ -28,11 +36,11 @@ router.get('/:id', async (req, res) => {
     const stage = await Stage.findByPk(req.params.id, {
       include: [
         {
-          model: Stage_Event, // Include Stage_Event model
+          model: Stage_Event, 
           as: 'stageEvents',
           include: [
             {
-              model: Event, // Include Event model
+              model: Event, 
               as: 'event'
             }
           ]
@@ -49,6 +57,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
+
 // Create route (create a new stage)
 router.post('/', async (req, res) => {
     console.log(req.body); // Good for debugging
